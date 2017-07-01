@@ -75,6 +75,9 @@ echo "etcd_peer_urls=$etcd_peer_urls"
 etcd_existing_peer_urls=
 etcd_existing_peer_names=
 etcd_good_member_url=
+etcd_initial_peer_urls=$(echo $etcd_peer_urls|sed 's: :,:g'|sed 's:2379:2380:g')                                                                               
+
+echo "etcd_initial_peer_urls=$etcd_initial_peer_urls" 
 
 for url in $etcd_peer_urls; do
     case "$url" in
@@ -188,6 +191,7 @@ else
 ETCD_INITIAL_CLUSTER_STATE=new
 ETCD_NAME=$ec2_instance_id
 ETCD_INITIAL_CLUSTER="$etcd_initial_cluster"
+ETCD_OPTS="--initial-advertise-peer-urls=\"$etcd_initial_peer_urls\""
 EOF
 fi
 
